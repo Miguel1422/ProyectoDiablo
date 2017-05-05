@@ -6,6 +6,7 @@
 package gui;
 
 import conexiones.LoginManager;
+import static config.Constants.*;
 
 /**
  *
@@ -91,10 +92,17 @@ public class Login extends javax.swing.JFrame {
         String user = txtUser.getText();
         String pass = txtPass.getText();
 
-        if (LoginManager.login(user, pass)) {
-            System.out.println("si");
-        } else{
-            System.out.println("no");
+        switch (LoginManager.login(user, pass)) {
+            case USER:
+                System.out.println("si");
+                break;
+            case ADMIN:
+                this.dispose();
+                new AdminFrm().setVisible(true);
+                break;
+            default:
+                System.out.println("no");
+                break;
         }
 
 
