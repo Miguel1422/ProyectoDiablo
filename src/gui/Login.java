@@ -6,6 +6,7 @@
 package gui;
 
 import conexiones.LoginManager;
+import conexiones.UserManager;
 import static config.Constantes.*;
 
 /**
@@ -94,10 +95,13 @@ public class Login extends javax.swing.JFrame {
 
         switch (LoginManager.login(user, pass)) {
             case USER:
-                System.out.println("si");
+                this.dispose();
+                USUARIO = UserManager.getUser(user);
+                new ComprasFrm().setVisible(true);
                 break;
             case ADMIN:
                 this.dispose();
+                USUARIO = UserManager.getUser(user);
                 new AdminFrm().setVisible(true);
                 break;
             default:

@@ -66,4 +66,22 @@ public class VentasManager {
         }
     }
 
+    public static boolean comprar(Venta v) {
+        try {
+
+            Connection micon = Conexion.getInstance().getConnection();
+            //String cadsql = "Insert into peliculas (nombre,precio)" + " values (?,?)";
+            String cadsql = String.format("INSERT INTO `proyecto`.`ventas` "
+                    + "(`id_cliente`, `descripcion`, `total`)"
+                    + " VALUES ('%d', '%s', '%f')",
+                    UserManager.getUserId(v.getUser()), v.getDescripcion(), v.getTotal());
+            PreparedStatement pstm = micon.prepareStatement(cadsql);
+
+            pstm.execute();
+            pstm.close();
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
 }

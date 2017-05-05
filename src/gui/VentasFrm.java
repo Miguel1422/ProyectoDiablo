@@ -5,6 +5,7 @@
  */
 package gui;
 
+import clases.MultiLineCellRenderer;
 import clases.User;
 import clases.Venta;
 import conexiones.UserManager;
@@ -19,12 +20,29 @@ import javax.swing.table.DefaultTableModel;
 public class VentasFrm extends javax.swing.JDialog {
 
     private DefaultTableModel dt;
+    private int defH;
 
     public VentasFrm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        dt = new DefaultTableModel(new String[]{"Cliente", "Descripcion", "Total"}, 0);
+        dt = new DefaultTableModel() {
+            public Class getColumnClass(int columnIndex) {
+                return String.class;
+            }
+        };
+
+        //dt = (DefaultTableModel)jTable1.getModel();
         jTable1.setModel(dt);
+
+        dt.setDataVector(null, new Object[]{"Nombre", "Descripcion", "total"});
+        jTable1.setDefaultRenderer(String.class, new MultiLineCellRenderer());
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(200);
+
+        jTable1.setEnabled(false);
+
+        //dt.addRow(new Object[]{new String[]{"asd","asd"}});
+        defH = jTable1.getRowHeight();
+
     }
 
     /**
@@ -68,7 +86,15 @@ public class VentasFrm extends javax.swing.JDialog {
             new String [] {
                 "Descripcion", "Total"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -77,7 +103,7 @@ public class VentasFrm extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
@@ -86,10 +112,8 @@ public class VentasFrm extends javax.swing.JDialog {
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 13, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -101,8 +125,8 @@ public class VentasFrm extends javax.swing.JDialog {
                     .addComponent(jButton1)
                     .addComponent(jButton2))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         pack();
@@ -115,9 +139,12 @@ public class VentasFrm extends javax.swing.JDialog {
         while (dt.getRowCount() > 0) {
             dt.removeRow(0);
         }
-
+        int i = 0;
         for (Venta v : a) {
+            String[] lin = v.getDescripcion().split("\n");
+
             dt.addRow(new Object[]{v.getUser(), v.getDescripcion(), v.getTotal()});
+            jTable1.setRowHeight(i++, defH * lin.length);
         }
 
 
@@ -131,9 +158,15 @@ public class VentasFrm extends javax.swing.JDialog {
             dt.removeRow(0);
         }
 
+        int i = 0;
         for (Venta v : a) {
+            String[] lin = v.getDescripcion().split("\n");
             dt.addRow(new Object[]{v.getUser(), v.getDescripcion(), v.getTotal()});
+            jTable1.setRowHeight(i++, defH * lin.length);
+
         }
+
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

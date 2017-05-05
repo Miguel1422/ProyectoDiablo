@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class BookManager {
 
@@ -98,6 +99,32 @@ public class BookManager {
             return true;
         } catch (Exception ex) {
             return false;
+        }
+    }
+
+    public static ArrayList<Libro> getAll() {
+        ArrayList<Libro> l = new ArrayList<>();
+        try {
+            Connection micon = Conexion.getInstance().getConnection();
+            String cadsql = String.format("SELECT * FROM libros");
+            PreparedStatement pstm = micon.prepareStatement(cadsql);
+            ResultSet rs = pstm.executeQuery(cadsql);
+            while (rs.next()) {
+                //pstm.execute();
+                //pstm.close();
+                String titulo = rs.getString("titulo");
+                int copias = rs.getInt("copias");
+                double precio = rs.getFloat("precio");
+                l.add(new Libro(rs.getInt("id"), titulo, copias, precio));
+            }
+            pstm.execute();
+            pstm.close();
+            return l;
+        } catch (SQLException e) {
+            System.out.println("Error " + e.getMessage());
+            return null;
+        } catch (NullPointerException e) {
+            return null;
         }
     }
 
