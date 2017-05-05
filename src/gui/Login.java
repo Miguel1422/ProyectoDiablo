@@ -6,7 +6,7 @@
 package gui;
 
 import conexiones.LoginManager;
-import static config.Constants.*;
+import static config.Constantes.*;
 
 /**
  *

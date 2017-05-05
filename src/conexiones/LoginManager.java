@@ -40,6 +40,8 @@ public class LoginManager {
         } catch (SQLException e) {
             System.out.println("Error " + e.getMessage());
             return 0;
+        } catch (NullPointerException e) {
+            return 0;
         }
     }
 }

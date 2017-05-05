@@ -43,9 +43,9 @@ public class Conexion {
             Class.forName(driver);
             con = DriverManager.getConnection(url, user, pwd);
         } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Error del driver");
+            JOptionPane.showMessageDialog(null, "Error del driver " + ex.getMessage());
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error al conectarnos");
+            System.out.println(ex.getMessage());
         }
 
     }
