@@ -1,23 +1,22 @@
 package conexiones;
 
-import clases.User;
+import clases.Libro;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserManager {
+public class BookManager {
 
     /**
-     * **
      *
-     * @param user usuario a buscar
+     * @param book usuario a buscar
      * @return el id del usuario buscado o 0 si no se encuentra
      */
-    public static int getUserId(String user) {
+    public static int getBookId(String book) {
         try {
             Connection micon = Conexion.getInstance().getConnection();
-            String cadsql = String.format("SELECT * FROM usuarios WHERE nombre = '%s'", user);
+            String cadsql = String.format("SELECT * FROM libros WHERE titulo = '%s'", book);
             PreparedStatement pstm = micon.prepareStatement(cadsql);
             ResultSet rs = pstm.executeQuery(cadsql);
             while (rs.next()) {
@@ -36,15 +35,14 @@ public class UserManager {
         }
     }
 
-    public static boolean addUser(User u) {
+    public static boolean addBook(Libro l) {
         try {
-            if (getUserId(u.getNombre()) != 0) {
+            if (getBookId(l.getNombre()) != 0) {
                 return false;
             }
             Connection micon = Conexion.getInstance().getConnection();
-            //String cadsql = "Insert into peliculas (nombre,precio)" + " values (?,?)";
-            String cadsql = String.format("INSERT INTO `proyecto`.`usuarios` (`nombre`, `password`, `tipo`) "
-                    + "VALUES ('%s', '%s', '%d')", u.getNombre(), u.getPass(), u.getType());
+            String cadsql = String.format("INSERT INTO `proyecto`.`libros` (`titulo`, `copias`, `precio`) "
+                    + "VALUES ('%s', '%d', '%f')", l.getNombre(), l.getCopias(), l.getPrecio());
             PreparedStatement pstm = micon.prepareStatement(cadsql);
 
             pstm.execute();
@@ -55,19 +53,19 @@ public class UserManager {
         }
     }
 
-    public static User getUser(int id) {
+    public static Libro getBook(int id) {
         try {
             Connection micon = Conexion.getInstance().getConnection();
-            String cadsql = String.format("SELECT * FROM usuarios WHERE id = '%d'", id);
+            String cadsql = String.format("SELECT * FROM libros WHERE id = '%d'", id);
             PreparedStatement pstm = micon.prepareStatement(cadsql);
             ResultSet rs = pstm.executeQuery(cadsql);
             while (rs.next()) {
                 pstm.execute();
                 pstm.close();
-                int tipo = rs.getInt("tipo");
-                String user = rs.getString("nombre");
-                String pass = rs.getString("password");
-                return new User(tipo, user, pass, id);
+                String titulo = rs.getString("titulo");
+                int copias = rs.getInt("copias");
+                double precio = rs.getFloat("precio");
+                return new Libro(id, titulo, copias, precio);
             }
             pstm.execute();
             pstm.close();
@@ -80,19 +78,19 @@ public class UserManager {
         }
     }
 
-    public static User getUser(String user) {
-        int id = getUserId(user);
-        return getUser(id);
+    public static Libro getBook(String user) {
+        int id = getBookId(user);
+        return BookManager.getBook(id);
     }
 
-    public static boolean removeUser(User u) {
+    public static boolean removeBook(Libro u) {
         try {
-            if (getUserId(u.getNombre()) == 0) {
+            if (getBookId(u.getNombre()) == 0) {
                 return false;
             }
             Connection micon = Conexion.getInstance().getConnection();
             //String cadsql = "Insert into peliculas (nombre,precio)" + " values (?,?)";
-            String cadsql = String.format("DELETE FROM `proyecto`.`usuarios` WHERE `usuarios`.`id` = %d", u.getId());
+            String cadsql = String.format("DELETE FROM `proyecto`.`libros` WHERE `libros`.`id` = %d", u.getId());
             PreparedStatement pstm = micon.prepareStatement(cadsql);
 
             pstm.execute();
@@ -103,20 +101,19 @@ public class UserManager {
         }
     }
 
-    public static boolean editUser(User u) {
+    public static boolean editBook(Libro u) {
         try {
-            if (getUserId(u.getNombre()) == 0) {
+            if (getBookId(u.getNombre()) == 0) {
                 return false;
             }
             Connection micon = Conexion.getInstance().getConnection();
-            //String cadsql = "Insert into peliculas (nombre,precio)" + " values (?,?)";
             String cadsql = String.format(
-                    "UPDATE `proyecto`.`usuarios` SET "
-                    + "`nombre` = '%s', "
-                    + "`password` = '%s', "
-                    + "`tipo` = '%d'"
-                    + " WHERE `usuarios`.`id` = %d",
-                    u.getNombre(), u.getPass(), u.getType(), u.getId());
+                    "UPDATE `proyecto`.`libros` SET "
+                    + "`titulo` = '%s', "
+                    + "`copias` = '%d', "
+                    + "`precio` = '%f'"
+                    + " WHERE `libros`.`id` = %d",
+                    u.getNombre(), u.getCopias(), u.getPrecio(), u.getId());
             PreparedStatement pstm = micon.prepareStatement(cadsql);
 
             pstm.execute();
