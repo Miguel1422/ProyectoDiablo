@@ -8,6 +8,7 @@ package gui;
 import clases.User;
 import conexiones.UserManager;
 import static config.Constantes.*;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -165,6 +166,7 @@ public class ClienteFrm extends javax.swing.JDialog {
             btnEd.setEnabled(true);
         } else {
             System.out.println("Usuaerio no encontrado");
+            JOptionPane.showMessageDialog(this, "no existe o murio", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

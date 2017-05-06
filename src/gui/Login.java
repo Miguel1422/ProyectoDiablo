@@ -8,6 +8,7 @@ package gui;
 import conexiones.LoginManager;
 import conexiones.UserManager;
 import static config.Constantes.*;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -105,7 +106,7 @@ public class Login extends javax.swing.JFrame {
                 new AdminFrm().setVisible(true);
                 break;
             default:
-                System.out.println("no");
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrecta", "Error", JOptionPane.INFORMATION_MESSAGE);
                 break;
         }
 

@@ -11,6 +11,7 @@ import clases.Venta;
 import conexiones.UserManager;
 import conexiones.VentasManager;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -134,6 +135,12 @@ public class VentasFrm extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         User u = UserManager.getUser(jTextField1.getText());
+
+        if (u == null) {
+            JOptionPane.showMessageDialog(this, "No existe", "Error", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
         ArrayList<Venta> a = VentasManager.compras(u);
 
         while (dt.getRowCount() > 0) {

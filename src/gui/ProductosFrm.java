@@ -7,6 +7,7 @@ package gui;
 
 import clases.Libro;
 import conexiones.BookManager;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -172,6 +173,7 @@ public class ProductosFrm extends javax.swing.JDialog {
             btnBa.setEnabled(true);
             btnEd.setEnabled(true);
         } else {
+            JOptionPane.showMessageDialog(this, "Fijese que ese libro no lo manejamos", "Error", JOptionPane.INFORMATION_MESSAGE);
             System.out.println("Usuaerio no encontrado");
         }
     }//GEN-LAST:event_jButton1ActionPerformed

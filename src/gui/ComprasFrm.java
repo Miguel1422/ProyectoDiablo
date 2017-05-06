@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import clases.Libro;
@@ -34,7 +29,6 @@ public class ComprasFrm extends javax.swing.JFrame {
         ventas = new ArrayList<>();
         dt = new DefaultTableModel(new Object[]{"Libro", "precio", "Cantidad"}, 0);
         jTable1.setModel(dt);
-
 
     }
 
@@ -212,6 +206,11 @@ public class ComprasFrm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Libro l = BookManager.getBook(txtPro.getText());
+        if (l == null) {
+            JOptionPane.showMessageDialog(this, "Producto no encontrado", "Error", JOptionPane.INFORMATION_MESSAGE);
+            return;
+
+        }
         txtSt.setText(l.getCopias() + "");
         txtPr.setText(String.format("%.2f", l.getPrecio()));
         txtId.setText(l.getId() + "");
@@ -228,22 +227,36 @@ public class ComprasFrm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        int n = Integer.parseInt(txtCa.getText());
-        int st = Integer.parseInt(txtSt.getText());
-        Libro l = BookManager.getBook(Integer.parseInt(txtId.getText()));
-        l.setCopias(n);
-        if (n <= st) {
-            double to = Double.parseDouble(txtTo.getText());
-            to = (to + (n * l.getPrecio()));
-            txtTo.setText(String.format("%.2f", to));
-            ventas.add(l);
-            txtSt.setText(st - n + "");
-            dt.addRow(new Object[]{l.getNombre(), l.getPrecio(), l.getCopias()});
+
+        try {
+            int n = Integer.parseInt(txtCa.getText());
+            int st = Integer.parseInt(txtSt.getText());
+            Libro l = BookManager.getBook(Integer.parseInt(txtId.getText()));
+            l.setCopias(n);
+            if (n <= st) {
+                double to = Double.parseDouble(txtTo.getText());
+                to = (to + (n * l.getPrecio()));
+                txtTo.setText(String.format("%.2f", to));
+                ventas.add(l);
+
+                dt.addRow(new Object[]{l.getNombre(), l.getPrecio(), l.getCopias()});
+            } else {
+                JOptionPane.showMessageDialog(this, "No hay pero si gusta para la proxima semana se lo tenemos",
+                        "Error", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Error men", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         String d = "";
+
+        if (ventas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Comprame algo pehh", "Error", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
         for (Libro l : ventas) {
             d += l.getNombre() + " " + l.getCopias() + "*" + l.getPrecio() + "\n";
             Libro prev = BookManager.getBook(l.getId());
